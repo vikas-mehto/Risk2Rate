@@ -1,24 +1,30 @@
-# app.py — Optimized Health Insurance Premium Predictor (Streamlit Deploy Ready)
+# app.py — Optimized Health Insurance Premium Predictor
+
+import os
+from io import BytesIO
 
 import streamlit as st
 import pandas as pd
-import joblib
-import os
-import shap
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
+import joblib
 
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
-from io import BytesIO
 
-# ---------------- PAGE CONFIG ----------------
+# ============================================================
+# PAGE CONFIG
+# ============================================================
+
 st.set_page_config(
     page_title="Health Premium Predictor",
     layout="centered"
 )
 
-# ---------------- PATHS ----------------
+# ============================================================
+# PATHS
+# ============================================================
+
 ROOT = os.path.dirname(os.path.dirname(__file__))
 
 MODEL_PATH = os.path.join(
@@ -27,14 +33,20 @@ MODEL_PATH = os.path.join(
     "insurance_model.pkl"
 )
 
-# ---------------- LOAD MODEL ----------------
+# ============================================================
+# LOAD MODEL
+# ============================================================
+
 @st.cache_resource
 def load_model():
     return joblib.load(MODEL_PATH)
 
 model = load_model()
 
-# ---------------- SHAP HELPERS ----------------
+# ============================================================
+# SHAP HELPERS
+# ============================================================
+
 def get_feature_names(preprocessor):
 
     feature_names = []
@@ -82,23 +94,25 @@ def filter_selected_city_shap(
 
 
 # ============================================================
-#                           UI
+# UI
 # ============================================================
 
-st.markdown("# **Risk2Rate**")
-st.caption("## Health insurance premium estimator")
+st.markdown("# Risk2Rate")
+st.caption("Health Insurance Premium Estimator")
 
 st.divider()
 
-# ---------------- SIDEBAR INPUTS ----------------
+# ============================================================
+# SIDEBAR INPUTS
+# ============================================================
+
 st.sidebar.markdown("## Policy Details")
 
 age = st.sidebar.number_input(
     "Age",
     18,
     80,
-    30,
-    help="Age of insured person"
+    30
 )
 
 gender = st.sidebar.selectbox(
@@ -111,7 +125,6 @@ smoker = st.sidebar.selectbox(
     ["No", "Yes"]
 )
 
-# ---------------- BMI INPUTS ----------------
 height_cm = st.sidebar.number_input(
     "Height (cm)",
     140,
@@ -195,7 +208,7 @@ claim_settlement_ratio = st.sidebar.slider(
 predict_btn = st.sidebar.button("Predict Premium")
 
 # ============================================================
-#                       PREDICTION
+# PREDICTION
 # ============================================================
 
 if predict_btn:
@@ -217,10 +230,16 @@ if predict_btn:
 
     }])
 
-    # ---------------- BASE PREDICTION ----------------
+    # ============================================================
+    # BASE PREDICTION
+    # ============================================================
+
     base_prediction = model.predict(input_df)[0]
 
-    # ---------------- SMOKING ADJUSTMENT ----------------
+    # ============================================================
+    # SMOKING ADJUSTMENT
+    # ============================================================
+
     if smoker == "Yes":
 
         adjusted_prediction = base_prediction * 1.35
@@ -239,7 +258,10 @@ if predict_btn:
             "5% discount applied."
         )
 
-    # ---------------- BMI CALCULATION ----------------
+    # ============================================================
+    # BMI CALCULATION
+    # ============================================================
+
     bmi = weight_kg / ((height_cm / 100) ** 2)
 
     bmi_factor = 1.0
@@ -248,34 +270,25 @@ if predict_btn:
     if 25 <= bmi < 30:
 
         bmi_factor = 1.07
-        bmi_note = (
-            "Overweight → "
-            "7% premium increase."
-        )
+        bmi_note = "Overweight → 7% premium increase."
 
     elif 30 <= bmi < 35:
 
         bmi_factor = 1.15
-        bmi_note = (
-            "Obese Class I → "
-            "15% premium increase."
-        )
+        bmi_note = "Obese Class I → 15% premium increase."
 
     elif bmi >= 35:
 
         bmi_factor = 1.30
-        bmi_note = (
-            "Obese Class II/III → "
-            "30% premium increase."
-        )
+        bmi_note = "Obese Class II/III → 30% premium increase."
 
     adjusted_prediction *= bmi_factor
 
     # ============================================================
-    #                           RESULTS
+    # RESULTS
     # ============================================================
 
-    st.markdown("### Estimated Premium")
+    st.markdown("## Estimated Premium")
 
     c1, c2 = st.columns(2)
 
@@ -292,10 +305,13 @@ if predict_btn:
     st.caption(smoking_note)
     st.caption(bmi_note)
 
-    # ---------------- BMI ANALYSIS ----------------
+    # ============================================================
+    # BMI ANALYSIS
+    # ============================================================
+
     st.divider()
 
-    st.markdown("### BMI Analysis")
+    st.markdown("## BMI Analysis")
 
     st.write(f"**BMI:** {bmi:.1f}")
 
@@ -311,10 +327,11 @@ if predict_btn:
     else:
         st.error("Category: Obese")
 
-    # ---------------- CONFIDENCE INTERVAL ----------------
-    st.divider()
+    # ============================================================
+    # CONFIDENCE INTERVAL
+    # ============================================================
 
-    st.markdown("### Premium Confidence Interval")
+    st.divider()
 
     uncertainty = 0.10
 
@@ -327,14 +344,19 @@ if predict_btn:
     lower_bound = adjusted_prediction * (1 - uncertainty)
     upper_bound = adjusted_prediction * (1 + uncertainty)
 
+    st.markdown("## Premium Confidence Interval")
+
     st.write(
         f"₹ {lower_bound:,.0f} — ₹ {upper_bound:,.0f}"
     )
 
-    # ---------------- WHY PREMIUM ----------------
+    # ============================================================
+    # PREMIUM REASONS
+    # ============================================================
+
     st.divider()
 
-    st.markdown("### Why is this premium high?")
+    st.markdown("## Why is this premium high?")
 
     reasons = []
 
@@ -353,13 +375,19 @@ if predict_btn:
     if waiting_period_years == 0:
         reasons.append("Immediate coverage increases premium.")
 
+    if len(reasons) == 0:
+        st.success("Your profile is relatively low risk.")
+
     for r in reasons:
         st.write("•", r)
 
-    # ---------------- RECOMMENDATIONS ----------------
+    # ============================================================
+    # RECOMMENDATIONS
+    # ============================================================
+
     st.divider()
 
-    st.markdown("### How can you reduce your premium?")
+    st.markdown("## How can you reduce your premium?")
 
     recommendations = []
 
@@ -383,58 +411,19 @@ if predict_btn:
             "Longer waiting periods reduce premium."
         )
 
+    if len(recommendations) == 0:
+        st.success("Your policy setup is already optimized.")
+
     for rec in recommendations:
         st.write("•", rec)
 
     # ============================================================
-    #                       SHAP EXPLANATION
+    # INSURER COMPARISON
     # ============================================================
 
-    try:
-
-        st.divider()
-
-        st.markdown("### Feature Impact (SHAP Explanation)")
-
-        preprocessor = model.named_steps["pre"]
-        rf_model = model.named_steps["rf"]
-
-        X_transformed = preprocessor.transform(input_df)
-
-        feature_names = get_feature_names(preprocessor)
-
-        explainer = shap.TreeExplainer(rf_model)
-
-        shap_values = explainer.shap_values(X_transformed)
-
-        filtered_vals, filtered_names = (
-            filter_selected_city_shap(
-                shap_values[0],
-                feature_names,
-                city
-            )
-        )
-
-        fig, ax = plt.subplots(figsize=(8, 4))
-
-        shap.bar_plot(
-            filtered_vals,
-            feature_names=filtered_names,
-            show=False
-        )
-
-        st.pyplot(fig)
-
-    except Exception as e:
-
-        st.warning(
-            f"SHAP explanation unavailable: {e}"
-        )
-
-    # ---------------- INSURER COMPARISON ----------------
     st.divider()
 
-    st.markdown("### Insurer Comparison")
+    st.markdown("## Insurer Comparison")
 
     insurer_adjustment = {
 
@@ -462,21 +451,72 @@ if predict_btn:
 
         })
 
-    st.dataframe(
-        pd.DataFrame(comparison)
-        .sort_values("Estimated Annual Premium (₹)"),
+    comparison_df = pd.DataFrame(comparison)
 
+    st.dataframe(
+        comparison_df.sort_values(
+            "Estimated Annual Premium (₹)"
+        ),
         use_container_width=True,
         hide_index=True
     )
 
     # ============================================================
-    #                       PDF DOWNLOAD
+    # SHAP EXPLANATION (LAZY LOAD)
+    # ============================================================
+
+    with st.expander("Show SHAP Feature Impact"):
+
+        try:
+
+            import shap
+
+            preprocessor = model.named_steps["pre"]
+            rf_model = model.named_steps["rf"]
+
+            X_transformed = preprocessor.transform(input_df)
+
+            feature_names = get_feature_names(preprocessor)
+
+            explainer = shap.TreeExplainer(rf_model)
+
+            shap_values = explainer.shap_values(
+                X_transformed
+            )
+
+            filtered_vals, filtered_names = (
+                filter_selected_city_shap(
+                    shap_values[0],
+                    feature_names,
+                    city
+                )
+            )
+
+            fig, ax = plt.subplots(figsize=(8, 4))
+
+            shap.bar_plot(
+                filtered_vals,
+                feature_names=filtered_names,
+                show=False
+            )
+
+            st.pyplot(fig)
+
+            plt.close(fig)
+
+        except Exception as e:
+
+            st.warning(
+                f"SHAP explanation unavailable: {e}"
+            )
+
+    # ============================================================
+    # PDF DOWNLOAD
     # ============================================================
 
     st.divider()
 
-    st.markdown("### Download Report")
+    st.markdown("## Download Report")
 
     buffer = BytesIO()
 
