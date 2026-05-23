@@ -5,3 +5,5 @@ numpy
 matplotlib
 shap
 xgboost
+reportlab
+joblib
