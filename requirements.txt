@@ -1,21 +1,8 @@
-<<<<<<< HEAD
-streamlit
-scikit-learn
-pandas
-numpy
-matplotlib
-shap
-xgboost
-reportlab
-joblib
-=======
-streamlit
-scikit-learn
-pandas
-numpy
-matplotlib
-shap
-xgboost
-reportlab
-joblib
->>>>>>> f01b809ff3737afbf70c4a60185b793acfb67141
+streamlit==1.45.1
+scikit-learn==1.6.1
+pandas==2.2.3
+numpy==2.2.5
+matplotlib==3.10.3
+shap==0.47.2
+joblib==1.5.0
+reportlab==4.4.1
