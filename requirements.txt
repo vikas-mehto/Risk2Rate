@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 streamlit
 scikit-learn
 pandas
@@ -7,3 +8,14 @@ shap
 xgboost
 reportlab
 joblib
+=======
+streamlit
+scikit-learn
+pandas
+numpy
+matplotlib
+shap
+xgboost
+reportlab
+joblib
+>>>>>>> f01b809ff3737afbf70c4a60185b793acfb67141
