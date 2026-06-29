@@ -20,12 +20,7 @@
   </a>
 </p>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.12-blue?style=flat-square&logo=python"/>
-  <img src="https://img.shields.io/badge/Streamlit-Web_App-FF4B4B?style=flat-square&logo=streamlit"/>
-  <img src="https://img.shields.io/badge/Scikit--Learn-Random_Forest-orange?style=flat-square&logo=scikitlearn"/>
-  <img src="https://img.shields.io/badge/SHAP-Explainable_AI-green?style=flat-square"/>
-</p>
+
 
 ---
 
