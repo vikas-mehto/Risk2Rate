@@ -1,24 +1,5 @@
 # 🩺 Risk2Rate – AI-Powered Health Insurance Premium Predictor
 
-<p align="center">
-  <strong>Predict health insurance premiums using Machine Learning with explainable AI insights.</strong>
-</p>
-
-<p align="center">
-  <img src="assets/demo.gif" alt="Risk2Rate Demo" width="850"/>
-</p>
-
-<p align="center">
-  <a href="YOUR_STREAMLIT_APP_URL">
-    <img src="https://img.shields.io/badge/🚀_Live_Demo-Streamlit-red?style=for-the-badge&logo=streamlit" alt="Live Demo"/>
-  </a>
-  <a href="https://youtu.be/knC5EmH2ahY">
-    <img src="https://img.shields.io/badge/🎥_Demo-YouTube-red?style=for-the-badge&logo=youtube" alt="Demo Video"/>
-  </a>
-  <a href="https://github.com/vikas-mehto/Risk2Rate">
-    <img src="https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github" alt="GitHub"/>
-  </a>
-</p>
 
 
 
@@ -44,11 +25,7 @@ The application leverages a **Random Forest Regression** model trained on histor
 
 🌐 **Streamlit App**
 
-<p align="center">
-  <a href="https://risk2rate-kgfqpof8xxftirsedjqelh.streamlit.app/" target="_blank">
-    <img src="https://img.shields.io/badge/🚀_Live_Demo-Streamlit-red?style=for-the-badge&logo=streamlit" alt="Live Demo"/>
-  </a>
-</p>
+**🌐 Live Demo:** [Risk2Rate Web App](https://risk2rate-kgfqpof8xxftirsedjqelh.streamlit.app/)
 
 ---
 
