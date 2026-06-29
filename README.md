@@ -49,7 +49,7 @@ The application leverages a **Random Forest Regression** model trained on histor
 
 🌐 **Streamlit App**
 
-**YOUR_STREAMLIT_APP_URL**
+**[STREAMLIT_APP_URL](https://risk2rate-kgfqpof8xxftirsedjqelh.streamlit.app/)**
 
 ---
 
